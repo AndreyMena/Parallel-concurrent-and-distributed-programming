@@ -1,0 +1,39 @@
+procedure main(file)
+    Receives file
+    while line != lastLine
+        Read line
+        if can_it_be_converted_to_integer_greater_than_one
+            convert line to integer
+            factorize(integer)
+        else if line=1 or line=0
+            insert "NA" in dataBase
+            else if insert "invalid number" in dataBase
+    print all dataBase_results
+end procedure
+
+procedure factorize(integer)
+    string factors = ""
+        do
+            divider = 2
+            if numero%divider != 0
+                divider = divider + 1
+            else
+                numero = numero/divider
+                factors = factors+divider
+        while integer != 1
+        int factor = 2
+        string result = ""
+        do 
+            if factor is there in factors
+                int potencia = times that factor is in factors
+                if potencia >1
+                    result = result+factor+"^"+potencia+" "
+                    delete all factor in factors
+                else
+                    result = result+factor+" "
+                    elete all factor in factors
+            factor = factor + 1
+        while size of factor != 0
+    delete last index from result
+    return result
+end procedure 

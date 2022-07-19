@@ -1,0 +1,105 @@
+procedure main(argc, argv[]):
+  // Analyze arguments
+  shared drive_min_delay := 0
+  shared drive_max_delay := 0
+  shared verbose := false
+  if argc >= 3 then
+    drive_min_delay := integer(argv[1])
+    drive_max_delay := integer(argv[2])
+  end if
+  if argc >= 4 then
+    verbose := argv[3] = "-v"
+  end if
+  // Vehicle capacity in each segment of the roundabout
+  shared constant segment_capacity = read_integer()
+  // Create vehicles
+  index = 0;
+  while can_read(stdin) do
+      declare const enter_from = read_char(stdin)
+      declare const exit_to = read_char(stdin)
+      cars++
+    end while
+  roundabout = create_sem(roundabout, cars-1)
+  semsSegments = create_sems(4/*4 semaphores*/, segment_capacity)
+  for (int i = 0; i < cars; i++) {
+    create_thread(vehicle, enter_from, exit_to, roundabout, semsSegments)
+  }
+end procedure
+
+
+procedure vehicle(enter_from, exit_to, roundabout, semsSegments):
+  sem_wait(roundabout);
+
+  drive(enter_from, exit_to, semsSegments);
+
+  sem_post(roundabout);
+end procedure
+
+procedure drive()
+  if (enter_from == N) {
+    numberOfSegment = segmentFor_N
+    sem_wait(semsSegments[0])
+    move(enter_from, exit_to)
+    while (segment != exit_to) {
+      sem_wait(semsSegments[numberOfSegment])
+      run_in_the_segment
+      store_data
+      move();
+      sem_post(semsSegments[numberOfSegment])
+      change numberOfSegment;
+      change segment;
+    }
+  }
+  if (enter_from == S) {
+    numberOfSegment = segmentFor_S
+    sem_wait(semsSegments[0])
+    move(enter_from, exit_to)
+    while (segment != exit_to) {
+      sem_wait(semsSegments[numberOfSegment])
+      run_in_the_segment
+      store_data
+      move();
+      sem_post(semsSegments[numberOfSegment])
+      change numberOfSegment;
+      change segment;
+    }
+  }
+  if (enter_from == E) {
+    numberOfSegment = segmentFor_E
+    sem_wait(semsSegments[0])
+    move(enter_from, exit_to)
+    while (segment != exit_to) {
+      sem_wait(semsSegments[numberOfSegment])
+      run_in_the_segment
+      store_data
+      move();
+      sem_post(semsSegments[numberOfSegment])
+      change numberOfSegment;
+      change segment;
+    }
+  }
+  if (enter_from == O) {
+    numberOfSegment = segmentFor_O
+    sem_wait(semsSegments[0])
+    move(enter_from, exit_to)
+    while (segment != exit_to) {
+      sem_wait(semsSegments[numberOfSegment])
+      run_in_the_segment
+      store_data
+      move();
+      sem_post(semsSegments[numberOfSegment])
+      change numberOfSegment;
+      change segment;
+    }
+  }
+
+end procedure
+
+procedure move()
+  declare const range = drive_max_delay - drive_min_delay
+  declare duration := drive_min_delay
+  if range > 0 then
+    duration += rand() % range
+  end if
+  sleep(duration)
+end procedure

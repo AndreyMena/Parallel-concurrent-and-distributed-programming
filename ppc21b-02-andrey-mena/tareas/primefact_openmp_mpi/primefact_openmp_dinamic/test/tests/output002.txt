@@ -1,0 +1,15 @@
+111: 3 37
+222222: 2 3 7 11 13 37
+333333333: 3^3 37 333667
+444444444444: 2^2 3 7 11 13 37 101 9901
+555555555555555: 3 5 31 37 41 271 2906161
+666666666666666666: 2 3^3 7 11 13 19 37 52579 333667
+invalid number
+invalid number
+invalid number
+invalid number
+invalid number
+invalid number
+invalid number
+invalid number
+invalid number

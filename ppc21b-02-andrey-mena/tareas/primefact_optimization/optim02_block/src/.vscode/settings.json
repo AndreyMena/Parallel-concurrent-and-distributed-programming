@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "stdlib.h": "c",
+        "array_int.h": "c",
+        "inttypes.h": "c",
+        "unistd.h": "c"
+    }
+}
