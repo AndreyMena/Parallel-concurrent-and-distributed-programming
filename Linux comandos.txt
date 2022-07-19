@@ -1,0 +1,118 @@
+pwd		En que directorio me encuentro actualmente
+
+cd		(change directory) ej: cd doc(si damos tab nos completa a: Documents/) doble tab para ver las opciones, el mio esta en español asi que seria cd Documentos/
+
+ls		Lo que hay en la carpeta actual
+
+ls -l		Cantidad de archivos que hay (creo)
+
+ls -la		Lista todos los archivos incluyendo "." puntos.
+
+git clone 	(copiamos el ssh de "clone en git"), queda masomenos asi: git clone git@git.ucr.......
+
+cd ..		vamos al home.
+
+ctrl+h 		ver archivos ocultos, comienzan con "." punto.
+
+ctrl+alt+T 	abre terminal
+
+echo $PS1	Para que no salga toda la direccion tan larga del directorio donde nos encontramos.
+
+cp		copiar
+
+cat (archivo)	para ver que hay, por ejemplo "cat hello.c" ver que hay escrito.
+
+touch (nombre de archivo.algo)	Crea un nuevo archivo ya sea .txt .c etc.
+
+nano (archivo)	lo abre ej: nano hello.c
+
+sudo apt install build-essential	intala todos los paquetes build essential, como el compilador de c por ejemplo.
+
+cc --version	version de c.
+
+Siempre que se vaya a compilar: cc -g -Wall -Wextra hello.c -o hello(nombre de archivo ejecutable) -pthread(si el codigo fuente usa pthreads hay que ponerlo.)
+
+Para correr el programa podemos poner toda la direccion o: "./hello" y el lo busca.
+gedit
+ hello.c&		IMPORTANTE EL AMPERSON para poder editar sin que se congele la terminal, para asi poder hacer cocnurrencia con la terminal. El & significa corralo en segundo plano.
+ccplint
+ hello.c		Errores de estilo de codigo de acuerdo al estilo de google. Todo lo que escribamos tiene que pasar este chequeo
+
+echo hello >> .gitignore	copia parametros en salida estandar, osea escribe hello en .gitignore, si no existe .gitignore lo crea.
+
+cppcheck hello.c	chequea errores.
+
+\t		regular expresion de tabulador.
+
+ctrl+h		en geany para reemplazar todos los tabuladores con \t, use regular expresions y replace all close dialog quitar check.
+
+git commit -m 'Pthreads. Hola mundo(el nombre del commit)'	se hace el commit.
+
+git status		ver lo que tiene uno, ha hecho y puede enviar.(status).
+
+touch Makefile 		Crea Makefile (solo eso, no se pone extension.).
+
+rm hello		borra el archivo, en este caso el ejecutable.
+
+.PHONY: lint 		En los makefile para que lo corra lint independientemente de que este actualizada. Y a no hace falta ponerle las dependencias hello.c al lint ya que lo corre siempre. Significa que no se va crear un archivo es solo una etiquta.
+
+rm -f hello 		Fuerze la eliminacion, si quiero o si no, y si no existe no diga nada.
+
+alias g= git status	hace que git status se reproduzca con tal solo poner g.
+
+time ./hello		corre hello y muestra el tiempo que dura hello
+
+valgrind ./hello	checkeo valgrind. checkea informacion que requeriramos.
+
+./hello			corre el programa.
+
+valgrind --tool=memcheck ./hello	ve problemas de memoria, como fugas de memoria etc.
+
+valgrind --tool=helgrind ./hello	herramienta de concurrencia de valgrind.
+
+valgrind --quiet --tool=helgrind ./hello	corralo y solo muestre los errores.
+
+valgrind --v --tool=helgrind ./hello	da mas informacion
+
+valgrind -v -v --tool=helgrind ./hello	da aun mas informacion
+
+echo hello >> .gitignore	Crea .gitignore y escribe hello
+
+ctrl c 		mata programa
+crtl d 		end of file
+
+git commit -m 'Store sums in dynamic array instead of a static one. Close #13'
+
+bin/primefact_serial < test/tests/input001.txt | diff - test/tests/output001.txt
+
+lscpu       En cluster par ver cpus disponibles o en pc normal
+
+mpiexec -n 3 -f host-mpich ./bin/      cluster
+
+
+Para solucionarlo creamos una nueva rama temporal y hacemos que apunte al último commit haciendo un checkout de ella:
+git branch tmp
+git checkout tmp
+
+Movemos el puntero de la rama master al de nuestra nueva rama temporal:
+git branch -f main tmp
+git checkout main
+
+Borramos la rama temporal, que ya no es necesaria:
+git branch -d tmp
+
+Y ya podemos hacer el commit o el push tranquilamente:
+git push origin master
+
+bin/goldbach_serial < test/test-small/input002.txt | diff - test/test-small/output002.txt       //Pruebas
+bin/goldbach_pthread < test/test-small/input002.txt | diff - test/test-small/output002.txt       //Pruebas
+
+
+
+valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all bin/Concurrent_server
+
+ssh C04740@arenal.ecci.ucr.ac.cr
+
+mpiexec --oversubscribe -np 3 --hostfile hosts-openmpi bin/goldbach_omp_mpi < test/test-small/input001.txt
+
+mpiexec -np 3 bin/goldbach_omp_mpi < test/test-small/input006.txt
