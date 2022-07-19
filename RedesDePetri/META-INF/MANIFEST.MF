@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: 5.1.3-84aaf (IzPack)
+Main-Class: com.izforge.izpack.installer.bootstrap.Installer
+
