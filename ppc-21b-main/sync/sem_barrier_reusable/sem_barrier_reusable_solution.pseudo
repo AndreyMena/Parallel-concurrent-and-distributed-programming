@@ -1,0 +1,32 @@
+main:
+	shared count := 0
+	shared can_access_count := semaphore(1)
+	shared turnstile1 := semaphore(0)
+	shared turnstile2 := semaphore(1)
+
+	shared thread_count := read_integer()
+	create_thread(secondary, thread_count)
+
+secondary:
+	while true do
+		Statement A
+		
+		wait(can_access_count)
+		if ++count == thread_count then
+			wait(turnstile2)
+			signal(turnstile1)
+		signal(can_access_count)
+		
+		wait(turnstile1)
+		signal(turnstile1)
+
+		Statement B
+
+		wait(can_access_count)
+		if --count == 0 then
+			wait(turnstile1)
+			signal(turnstile2)
+		signal(can_access_count)
+		
+		wait(turnstile2)
+		signal(turnstile2)

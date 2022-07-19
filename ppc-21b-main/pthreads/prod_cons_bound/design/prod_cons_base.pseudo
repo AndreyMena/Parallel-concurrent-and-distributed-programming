@@ -1,0 +1,29 @@
+main(argc, argv[]):
+  if argc = 3 then
+    shared buffer_capacity := integer(argv[1])
+    shared buffer[buffer_capacity]
+    shared rounds := integer(argv[2])
+
+    shared can_produce := semaphore(?)
+    shared can_consume := semaphore(?)
+
+    create_thread(1, produce)
+    create_thread(1, consume)
+  end if
+
+produce:
+  count := 0
+  for round := 1 to rounds do
+    for index := 0 to buffer_capacity do
+      buffer[index] := ++count
+      print("Produced ", buffer[index])
+    end for
+  end for
+
+consume:
+  for round := 1 to rounds do
+    for index := 0 to buffer_capacity do
+      value := buffer[index]
+      print("Consumed ", value)
+    end for
+  end for

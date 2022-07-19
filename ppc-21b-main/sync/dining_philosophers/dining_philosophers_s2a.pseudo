@@ -1,0 +1,90 @@
+// Problem formulation
+/*
+• Only one philosopher can hold a fork at a time.
+• YES It must be impossible for a deadlock to occur.
+• NO It must be impossible for a philosopher to starve waiting for a fork.
+• YES It must be possible for more than one philosopher to eat at the same time.
+*/
+
+// Adds at least one left-handed (different from the rest) philosopher in the table
+// Solution is asymetric
+
+main:
+	shared NUM_PHILOS = 5 
+	shared semaphore[] fork = { 1, 1, 1, 1, 1 }
+	for i in range(NUM_PHILOS - 1) 
+		create_thread(philosopher_right_handed(i))
+
+	create_thread(philosopher_left_handed(NUM_PHILOS))
+
+philosopher_right_handed(int i):
+	while true do
+		// think for a bounded amount of time
+		think()		
+		// prior to eat, the philosopher must acquire both  right and left forks
+		get_forks_right_left(i)
+		// each for a bounded amount of time
+		eat()
+		// release the forks so that another philosoper can eat
+		put_forks(i)
+
+philosopher_left_handed(int i):
+	while true do
+		// think for a bounded amount of time
+		think()		
+		// prior to eat, the philosopher must acquire both  right and left forks
+		get_forks_left_right(i)
+		// each for a bounded amount of time
+		eat()
+		// release the forks so that another philosoper can eat
+		put_forks(i)
+
+right(int i): 
+	return i
+
+left(int i): 
+	return (i + 1) % NUM_PHILOS
+
+get_forks_right_left(int i):
+	wait(fork[right(i)])
+	wait(fork[left(i)])
+
+get_forks_left_right(int i):
+	wait(fork[left(i)])
+	wait(fork[right(i)])
+
+put_forks(int i):
+	signal(fork[right(i)])
+	signal(fork[left(i)])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> Produces a deadlock with 5 philosophers (illustrate with resource allocation diagrama)
+https://www.youtube.com/watch?v=_ruovgwXyYs 7:22 
+
+

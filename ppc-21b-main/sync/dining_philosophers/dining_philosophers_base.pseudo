@@ -1,0 +1,22 @@
+// Problem formulation
+/*
+• Only one philosopher can hold a fork at a time.
+• It must be impossible for a deadlock to occur.
+• It must be impossible for a philosopher to starve waiting for a fork.
+• It must be possible for more than one philosopher to eat at the same time.
+*/
+main:
+	for i in range(5) 
+		create_thread(philosopher(i)
+
+philosopher(i):
+
+	While (true)
+		// think for a bounded amount of time
+		think()		
+		// prior to eat, the philosopher must acquire both  right and left forks
+		get_forks()
+		// each for a bounded amount of time
+		eat()
+		// release the forks so that another philosoper can eat
+		put_forks()

@@ -1,0 +1,17 @@
+main:
+	shared turnstile := semaphore(0)
+
+	shared thread_count := read_integer()
+	create_thread(secondary, thread_count)
+
+secondary:
+	while true do
+		Statement A
+		
+	    // n-1 hilos se detienen, el último, n, pasa y 
+		// a partir de ahí todos los demás pueden pasar
+		wait(turnstile)
+		signal(turnstile)
+
+		Statement B
+

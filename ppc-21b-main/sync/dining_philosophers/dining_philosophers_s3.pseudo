@@ -1,0 +1,88 @@
+// Problem formulation
+/*
+• Only one philosopher can hold a fork at a time
+• YES It must be impossible for a deadlock to occur.
+• NO It must be impossible for a philosopher to starve waiting for a fork.
+• YES It must be possible for more than one philosopher to eat at the same time.
+*/
+
+// Includes the state of each philospher
+
+main:
+	shared mutex = semaphore(1)
+	shared state = {'thinking'} * 5
+	shared semaphore[] fork  = { 0, 0, 0, 0, 0 }
+	for i in range(NUM_PHILOS) 
+		create_thread(philosopher(i))
+
+philosopher(int i):
+	while true do
+		// think for a bounded amount of time
+		think()	
+		// prior to eat, the philosopher must acquire both  right and left forks
+		get_forks(i)
+		// each for a bounded amount of time
+		eat()
+		// release the forks so that another philosoper can eat
+		put_forks(i)
+
+get_forks(int i):
+	wait(mutex)
+	state[i] = 'hungry'
+	test(i)
+	signal(mutex)
+	wait(fork[i])
+
+put_forks(int i):
+	wait(mutex)
+	state[i] = 'thinking'
+	test(right(i))
+	test(left(i))
+	signal(mutex)
+
+test(int i):
+	if state[i] == 'hungry' and state[left(i)] != 'eating' and state[right(i)] != 'eating':
+       state[i] = 'eating'
+       signal(fork[i])
+
+right(int i): 
+	return i
+	
+left(int i): 
+	return (i + 1) % NUM_PHILOS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--> Tanenbaum "Modern Operating Systems", No deadlock since access to state is done while holding a mutex
+  Eating ?
+  1. get_forks finds the forks available, and proceeds immediately. 
+  2. One neighbors is eating so the philosopher blocks on its semaphore. 
+     To fishin, the eating philosopher executes test left/right signaling the neighbor's semaphore
+
+
+

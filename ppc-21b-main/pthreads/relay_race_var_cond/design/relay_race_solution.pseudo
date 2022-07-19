@@ -1,0 +1,42 @@
+function main(argc, argv[]):
+  if argc = 4 then
+    shared team_count := integer(argv[1])
+    shared stage1_delay := integer(argv[1])
+    shared stage2_delay := integer(argv[1])
+    shared batons := semaphore(0)[team_count]
+    shared position := 0
+    shared can_access_position := mutex()
+    shared condition_variable := can_begin_stage1
+    shared can_access_runners := mutex()
+    shared runners_ready := 0
+    
+    for team := 0 to team_count do
+      create_thread(run_stage1, team)
+      create_thread(run_stage2, team)
+    end for
+  else
+    print "usage: relay_race team_count stage1_delay stage2_delay"
+end main
+
+function run_stage1(team_number):
+  lock(can_access_runners)
+  if (++runners_ready < team_count)
+    wait(can_begin_stage1, can_access_runners)
+  else
+    broadcast(can_begin_stage1)  
+  unlock(can_access_runners)
+  
+  delay(stage1_delay)
+  signal(batons[team_number])
+end function
+
+function run_stage2(team_number):
+  wait(batons[team_number])
+  delay(stage2_delay)
+  lock(can_access_position)
+    my_team_position := ++position
+    if my_team_position <= 3 then
+      print('Place ', my_team_position, ': team ', team_number)
+    end if
+  unlock(can_access_position)
+end function

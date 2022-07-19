@@ -1,0 +1,38 @@
+// Indeterminism
+procedure main(argc, argv[])
+  // create thread_count as the result of converting argv[1] to integer
+  thread_count := integer(argv[1])
+
+  // Task concurrency -> separation of concerns
+  create_thread(waiter)
+  create_thread(cheff)
+  create_thread(barman)
+  
+  // Not Good 
+  create_thread(doAll)
+
+  // Data parallelism -> increase performance
+  for hall_region := 0 to 4 do
+    create_thread(waiter, hall_region)
+  end for
+
+end procedure
+
+
+procedure doAll()
+  print("waiter + cheff + barman tasks")
+end procedure
+
+procedure waiter(hall_region)
+  print("waiter tasks")
+end procedure
+
+procedure cheff()
+  print("cheff tasks")
+end procedure
+
+procedure barman()
+  print("barman tasks")
+end procedure
+
+

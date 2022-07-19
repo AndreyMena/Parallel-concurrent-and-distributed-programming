@@ -1,0 +1,21 @@
+procedure main:
+	shared x := 0
+    shared mutex
+	create_thread(thread_a)
+	create_thread(thread_b)
+end procedure
+
+procedure thread_a:
+    my_x := 0
+    lock(mutex)
+	x := 5
+    my_x := x
+    unlock(mutex)
+	print(my_x)
+end procedure
+
+procedure thread_b:
+    lock(mutex)
+	x := 7
+    unlock(mutex)
+end procedure

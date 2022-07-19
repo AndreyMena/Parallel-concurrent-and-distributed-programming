@@ -1,0 +1,11 @@
+main:
+	shared thread_count := read_integer()
+	shared ready[]
+	for index := 0 to thread_count do
+		ready[index] := semaphore(not index)
+		create_thread(1, secondary, index)
+
+secondary(rank):
+	wait(ready[?])
+	statement s1
+	signal(ready[?])

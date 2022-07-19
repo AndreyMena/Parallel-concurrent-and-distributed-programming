@@ -1,0 +1,32 @@
+// Indeterminism
+procedure main(argc, argv[])
+  // create thread_count as the result of convert argv[1] to integer
+  thread_count := SYSTEM(CPUs)
+
+  if(argc > 1)
+    thread_count := integer(argv[1])
+
+  create_threads(thread_count)
+
+end procedure
+
+
+procedure create_threads(thread_count)
+  
+  threads[thread_count]
+
+  for thread_number := 0 to thread_count do
+    threads[thread_number] := create_thread(greet, thread_number)
+  end for
+
+  print("Hello from main thread")
+
+  for thread_number := 0 to thread_count do
+    join(threads[thread_number])
+  end for
+end procedure 
+
+
+procedure greet(thread_number)
+  print("Hello from secondary thread ", thread_number)
+end procedure

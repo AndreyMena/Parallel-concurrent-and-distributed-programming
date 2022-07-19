@@ -1,0 +1,30 @@
+// Indeterminism
+procedure main(argc, argv[])
+  shared next_thread := 0
+  shared thread_count := SYSTEM(CPUs)
+  if(argc > 1)
+    thread_count := integer(argv[1])
+  create_threads(thread_count)
+end procedure
+
+
+procedure create_threads(thread_count)
+  // Must be dynamic memory
+  threads[thread_count]
+  for thread_number := 0 to thread_count do
+    threads[thread_number] := create_thread(greet, thread_number)
+  end for
+  //print("Hello from main thread")
+  for thread_number := 0 to thread_count do
+    join(threads[thread_number])
+  end for
+end procedure 
+
+
+procedure greet(thread_number)
+  while next_thread < thread_number do
+    // busy waiting
+  end while
+  print("Hello from secondary thread ", thread_number, " of ", thread_count)
+  next_thread := next_thread + 1  
+end procedure

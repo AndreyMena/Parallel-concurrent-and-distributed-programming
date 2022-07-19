@@ -1,0 +1,12 @@
+main:
+	shared capacity := read_integer()
+	shared thread_count := read_integer()
+	shared multiplex := semaphore(capacity)
+	
+	create_threads(thread_count, secondary)
+
+secondary:
+    // bounded waiting
+	wait(multiplex)
+	skate()
+	signal(capacity)

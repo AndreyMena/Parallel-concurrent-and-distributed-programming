@@ -1,0 +1,46 @@
+barrier(limit):
+	return record of
+		count := 0
+		limit := limit 
+		can_access_count := semaphore(1)
+		turnstile1 := semaphore(0)
+		turnstile2 := semaphore(1)
+
+wait(barrier):
+	barrier_phase1(barrier)
+	barrier_phase2(barrier)
+
+barrier_phase1(barrier):
+	wait(barrier.can_access_count)
+	if ++barrier.count == thread_count then
+		wait(barrier.turnstile2)
+		signal(barrier.turnstile1)
+	signal(barrier.can_access_count)
+
+	wait(barrier.turnstile1)
+	signal(barrier.turnstile1)
+
+barrier_phase2(barrier):
+	wait(barrier.can_access_count)
+	if --barrier.count == 0 then
+		wait(barrier.turnstile1)
+		signal(barrier.turnstile2)
+	signal(barrier.can_access_count)
+
+	wait(barrier.turnstile2)
+	signal(barrier.turnstile2)
+
+main:
+	shared thread_count := read_integer()
+	shared my_barrier := barrier(thread_count)
+	create_thread(secondary, thread_count)
+
+secondary:
+	while true do
+		Statement A
+
+		barrier_phase1(my_barrier)
+
+		Statement B
+		
+		barrier_phase2(my_barrier)
