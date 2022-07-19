@@ -1,0 +1,84 @@
+procedure main(argc, argv[]) {
+    create_HttpServer server
+    create_FactWebApp factWebApp
+    ...
+
+    return server.start(argc, argv[])
+}
+
+procedure start(argc, argv[]) {
+    shared Queue producingQue;
+    HttpConnectionHandler http_Conn_Handlers;
+    if (analyzeArguments(argc, argv)) {
+  
+        // Start all web applications
+        for (index := 0 index to aplications_capacity do) {
+          applications[index]->start();
+        }
+        for (index := 0 index to aplications_capacity do) {
+            http_Conn_Handlers[index]->create_HttpConnectionHandler()
+            http_Conn_Handlers[index]->setConsumingQueue(producingQue)
+            http_Conn_Handlers[index]->startThread()
+        }
+        ....
+
+
+        ....
+        acceptAllConnections()
+    }
+
+}
+
+procedure acceptAllConnections() {
+    procedure...
+    procedure...
+    procedure...
+    procedure...
+    procedure HttpClienteHandler(Socket& client)
+    procedure HttpConnectionHandler()
+}
+
+procedure HttpClienteHandler(Socket& client) {
+    producingQue->push(client)
+}
+
+procedure HttpConnectionHandler(Socket& client) {
+    shared HttpResponseQueue := assemble(max_threads)
+    while (true) {
+        HttpRequest httpRequest(client)
+        if (!httpRequest.parse()) {
+            break;
+        }
+        HttpResponse httpResponse(client)
+        HttpResponseQueue.setConsumingQueue(httpResponse)
+        HttpResponseHandler();
+    }
+}
+
+procedure HttpResponseHandler(){
+    HttpResponse httpResponse = HttpResponseQueue.pop()
+    const bool handled = this->handleHttpRequest(httpRequest, httpResponse);
+
+    if (!handled || httpRequest.getHttpVersion() == "HTTP/1.0") {
+      client.close();
+      break;
+    }
+    procedure route(ttpRequest* httpRequest,
+        HttpResponse* httpResponse)
+    
+
+}
+
+procedure route(){
+    aplication := consume(max_threads)
+    for (index := 0 index to max_threads do) {
+        HttpApp* app = this->applications[index];
+        if (app->handleHttpRequest(httpRequest, httpResponse)) {
+            applications[index]->webAppstart()
+            return true;
+        }
+}
+
+procedure webAppstart (){
+    
+}
