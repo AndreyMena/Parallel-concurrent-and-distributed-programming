@@ -1,0 +1,119 @@
+struct data_structure
+  inputsVector  // all read number
+  numOfSumsVector  // number of goldbach's sums for each line read
+  listArrThreeField  // Array List of three fields for goldbach's solution fact
+end struct
+
+procedure main(argc , argv[])
+  create data_structure
+  readStdin(data_structure)
+  goldbachCalc := create_goldbachCalc()  // A goldbach's calculator
+  goldbachCalc_run(data_structure)
+  printResult(data_structure)
+end procedure
+
+procedure readStdin(data_structure)
+  int64 number := 0
+  while read_from_standard_input(&number) == true do
+    if is_number_of_64_bits
+      store in data_structure.inputsVector[indexLine]: number
+    else
+      break  //Stop reading
+  end while
+end procedure
+
+procedure goldbachCalc_run(data_structure)
+  set memory for (data_structure.listArrThreeField, inputsVector.size)
+  for index := 0 to data_structure.inputsVector.length do
+    number := data_structure.inputsVector[index]
+    if number < 0
+      number = number * -1
+    if (number % 2 == 0)
+      goldbachCalc_strongConject(number, data_structure, index) // Even number
+    else
+      goldbachCalc_weakConject(number, data_structure, index) // Odd number
+  end
+end procedure
+
+// Adaptado de <https://www.youtube.com/watch?v=ROEnh3ji-Oc>
+procedure goldbachCalc_strongConject(number, data_structure, index)
+  if (0 <= number <= 5 )
+    store in data_structure.listArrThreeField[index]: 0, 0, 0
+  else
+    counterOfGoldbachsSolutions := 0
+    for firstPrimeNumber := 2 to number do
+      if isPrime(firstPrimeNumber)
+        secondPrimeNumber = number-firstPrimeNumber
+        if isPrime(secondPrimeNumber)
+          if firstPrimeNumber <= secondPrimeNumber
+            counterOfGoldbachsSolutions++
+            if counterOfGoldbachsSolutions == 1
+              store in data_structure.listArrThreeField[index]:
+                firstPrimeNumber, secondPrimeNumber, 0
+            else
+              store in data_structure.listArrThreeField[index]:
+                firstPrimeNumber, secondPrimeNumber, 0
+    end for
+    store counterOfGoldbachsSolutions in data_structure   //num of sums vector
+end procedure
+
+procedure goldbachCalc_weakConject(number, data_structure, index)
+  counterOfGoldbachsSolutions := 0
+  if (0 <= number <= 5 )
+    store in data_structure.listArrThreeField[index]: 0, 0, 0
+  else
+    for firstPrimeNumber := 2 to number do
+      if isPrime(firstPrimeNumber)
+        for secondPrimeNumber := 2 to number do
+          if isPrime(secondPrimeNumber)
+            for thirdPrimeNumber := 2 to number do
+              if isPrime(thirdPrimeNumber)
+                if firstPrimeNumber+secondPrimeNumber+thirdPrimeNumber == number
+                  if firstPrimeNumber <= secondPrimeNumber && secondPrimeNumber
+                    <= thirdPrimeNumber
+                  counterOfGoldbachsSolutions++
+                  if counterOfGoldbachsSolutions == 1
+                    store in data_structure.listArrThreeField[index]:
+                      firstPrimeNumber, secondPrimeNumber, thirdPrimeNumber
+                  else
+                    store in data_structure.listArrThreeField[index]:
+                      firstPrimeNumber, secondPrimeNumber, thirdPrimeNumber
+            end for
+        end for
+    end for
+  store counterOfGoldbachsSolutions in data_structure   //num of sums vector
+end procedure
+
+procedure isPrime(number)
+  if number < 2
+    return 0  //it isn't prime
+  for prime := 2 to prime < number do
+    if number % prime == 0
+      return 0  //it isn't prime
+  end for
+  return 1  //it's prime
+end procedure
+
+procedure printResult(data_structure)
+  for index := 0 to inputsVector.size do
+    print data_structure.inputsVector[index] + ": "
+    if data_structure.numOfSumsVector[index] == 0
+      print "NA"
+    else
+      print data_structure.numOfSumsVector[index] + "sums"
+      if data_structure.inputsVector[index] < 0   //If the number is negative
+        print ": "
+        for (indexArr : = 0 to listArrThreeField[[index]].size do
+          if ((inputsVector[index] * -1) % 2 == 0)
+            print data_structure.listArrThreeField[index].firstPrimeNumber[indexArr] + " + "
+            print data_structure.listArrThreeField[index].secondPrimeNumber[indexArr]
+          else
+            print data_structure.listArrThreeField[index].firstPrimeNumber[indexArr] + " + "
+            print data_structure.listArrThreeField[index].secondPrimeNumber[indexArr] + " + "
+            print data_structure.listArrThreeField[index].thirdPrimeNumber[indexArr]
+          if indexArr != listArrThreeField[index].size - 1
+            print ", " 
+        end for
+    print "\n"
+  end for
+end procedure

@@ -1,0 +1,152 @@
+struct sharedData
+  inputsVector  // all read number
+  numOfSumsVector  // number of goldbach's sums for each line read
+  listArrThreeField  // Array List of three fields for goldbach's solution fact
+  thread_count
+end struct
+
+struct private_data
+  min  // all read number
+  max  // max index to process from the array
+  thread_number
+  sharedData
+end struct
+
+procedure main(argc , argv[])
+  create sharedData
+  sharedData.thread_count := integer(argv[1])
+  readStdin(sharedData)
+  goldbachCalc := create_goldbachCalc()  // A goldbach's calculator
+  goldbachCalc_run(sharedData)
+  printResult(sharedData)
+end procedure
+
+procedure readStdin(sharedData)
+  int64 number := 0
+  while read_from_standard_input(&number) == true do
+    if is_number_of_64_bits
+      store in sharedData.inputsVector[indexLine]: number
+    else
+      break  //Stop reading
+  end while
+end procedure
+
+procedure goldbachCalc_run(sharedData)
+  set memory for (sharedData.listArrThreeField, inputsVector.size)
+  if inputsVector.size < sharedData.thread_count do
+    sharedData.thread_count := sharedData.inputsVector.size
+  end if
+  set memory for (private_data, sharedData.thread_count)
+  
+  jobDivision := sharedData.inputsVector.size / sharedData.thread_count  // Integer division
+  remaining := sharedData.inputsVector.size % sharedData.thread_count  // Integer division
+
+  for threadNumber := 0 to sharedData.thread_count do
+    minRank = (jobDivision * threadNumber) + min(threadNumber, remaining);
+    maxRank = (jobDivision * (threadNumber+1)) + min(threadNumber+1, remaining);
+
+    private_data[thread_number].min := minRank
+    private_data[thread_number].max := maxRank
+    private_data[thread_number].sharedData := sharedData
+    create_thread(goldbachCalc_directThreads, sharedData, private_data)
+  end for
+  
+  for threadNumber := 0 to sharedData.thread_count do
+    join_thread(thread[threadNumber])
+  end
+end procedure
+
+procedure goldbachCalc_directThreads(sharedData, private_data)
+  for index := private_data.min to private_data.max do
+    number := sharedData.inputsVector[index]
+    if number < 0
+      number = number * -1
+    if (number % 2 == 0)
+      goldbachCalc_strongConject(number, private_data, sharedData, index) // Even number
+    else
+      goldbachCalc_weakConject(number, private_data, index) // Odd number
+  end
+end procedure
+
+// Adaptado de <https://www.youtube.com/watch?v=ROEnh3ji-Oc>
+procedure goldbachCalc_strongConject(number, private_data, sharedData, index)
+  if (0 <= number <= 5 )
+    store in sharedData.listArrThreeField[index]: 0, 0, 0
+  else
+    counterOfGoldbachsSolutions := 0
+    for firstPrimeNumber := 2 to number do
+      if isPrime(firstPrimeNumber)
+        secondPrimeNumber = number-firstPrimeNumber
+        if isPrime(secondPrimeNumber)
+          if firstPrimeNumber <= secondPrimeNumber
+            counterOfGoldbachsSolutions++
+            if counterOfGoldbachsSolutions == 1
+              store in sharedData.listArrThreeField[index]:
+                firstPrimeNumber, secondPrimeNumber, 0
+            else
+              store in sharedData.listArrThreeField[index]:
+                firstPrimeNumber, secondPrimeNumber, 0
+    end for
+    store counterOfGoldbachsSolutions in sharedData   //num of sums vector
+end procedure
+
+procedure goldbachCalc_weakConject(number, sharedData, private_data, index)
+  counterOfGoldbachsSolutions := 0
+  if (0 <= number <= 5 )
+    store in sharedData.listArrThreeField[index]: 0, 0, 0
+  else
+    for firstPrimeNumber := 2 to number do
+      if isPrime(firstPrimeNumber)
+        for secondPrimeNumber := 2 to number do
+          if isPrime(secondPrimeNumber)
+            for thirdPrimeNumber := 2 to number do
+              if isPrime(thirdPrimeNumber)
+                if firstPrimeNumber+secondPrimeNumber+thirdPrimeNumber == number
+                  if firstPrimeNumber <= secondPrimeNumber && secondPrimeNumber
+                    <= thirdPrimeNumber
+                  counterOfGoldbachsSolutions++
+                  if counterOfGoldbachsSolutions == 1
+                    store in sharedData.listArrThreeField[index]:
+                      firstPrimeNumber, secondPrimeNumber, thirdPrimeNumber
+                  else
+                    store in sharedData.listArrThreeField[index]:
+                      firstPrimeNumber, secondPrimeNumber, thirdPrimeNumber
+            end for
+        end for
+    end for
+  store counterOfGoldbachsSolutions in sharedData   //num of sums vector
+end procedure
+
+procedure isPrime(number)
+  if number < 2
+    return 0  //it isn't prime
+  for prime := 2 to prime < number do
+    if number % prime == 0
+      return 0  //it isn't prime
+  end for
+  return 1  //it's prime
+end procedure
+
+procedure printResult(sharedData)
+  for index := 0 to inputsVector.size do
+    print sharedData.inputsVector[index] + ": "
+    if sharedData.numOfSumsVector[index] == 0
+      print "NA"
+    else
+      print sharedData.numOfSumsVector[index] + "sums"
+      if sharedData.inputsVector[index] < 0   //If the number is negative
+        print ": "
+        for (indexArr : = 0 to listArrThreeField[[index]].size do
+          if ((inputsVector[index] * -1) % 2 == 0)
+            print sharedData.listArrThreeField[index].firstPrimeNumber[indexArr] + " + "
+            print sharedData.listArrThreeField[index].secondPrimeNumber[indexArr]
+          else
+            print sharedData.listArrThreeField[index].firstPrimeNumber[indexArr] + " + "
+            print sharedData.listArrThreeField[index].secondPrimeNumber[indexArr] + " + "
+            print sharedData.listArrThreeField[index].thirdPrimeNumber[indexArr]
+          if indexArr != listArrThreeField[index].size - 1
+            print ", " 
+        end for
+    print "\n"
+  end for
+end procedure
