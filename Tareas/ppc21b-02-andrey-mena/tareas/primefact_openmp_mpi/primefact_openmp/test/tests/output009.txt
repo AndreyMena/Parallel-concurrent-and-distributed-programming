@@ -1,0 +1,6 @@
+9223372036854775807: 7^2 73 127 337 92737 649657
+invalid number
+-1: invalid number
+-9223372036854775807: invalid number
+-9223372036854775808: invalid number
+invalid number

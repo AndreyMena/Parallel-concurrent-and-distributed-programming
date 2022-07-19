@@ -1,0 +1,54 @@
+procedure main(argc, argv[]) {
+  plate[20]
+  pTime := 0.0
+  pDifusividad := 0.0
+  h := 0.0
+  epsilon := 0
+  if argc < 1 then 
+    print("Parametros insuficientes")
+  Else 
+    route := integer(argv(1))
+    ruta2[15]
+    contador := 0
+    while i < route.length && !encontrado do 
+      ruta2[i] = route[i]
+      if route[i] == "/" then 
+        contador++
+      if contador == 2 then 
+        encontrado := 1
+        jobtext = route.substr(i+1, route.length - 1)
+      i++
+    end
+    route := ruta2
+    jobtext := jobtext.substr(0, 7)
+    jobtext append "tsv"
+    ofstream outputJobTsv(jobtxt)
+    ifstream jobs
+    jobs.open
+    lineas := 0
+    thread_count = omp_get_max_threads();
+    if argc >= 3 then
+      thread_count = atoi(argv[2]); 
+      
+    buffer
+      b[1000]
+      int counter = 0;
+      if jobs.fail then
+       EXIT_FAILURE;
+      Else 
+        while !jobs.eof do 
+          print(jobs, plate, pTime, pDifusividad, h, epsilon)
+          if pTime < 0 then 
+            break
+          simulation;
+          error := simulation.run(plate, pTime, pDifusividad, h,
+          epsilon, route, thread_count, outputJobTsv);
+          if error == 0) then
+           cout<< "Error, no logro correr simulation run" << endl;
+          lineas++;
+          pTime := -1;
+        end
+        jobs.close
+        print("\n")
+        return 0
+}

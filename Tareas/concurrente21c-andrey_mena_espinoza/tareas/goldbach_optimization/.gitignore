@@ -1,0 +1,6 @@
+bin/
+build/
+doc/
+.vscode/
+*.out.*
+optim02/callgrind.out.11194-02

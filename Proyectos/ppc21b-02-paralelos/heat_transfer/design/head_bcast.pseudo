@@ -1,0 +1,40 @@
+procedure main:
+  declare jobs as a dynamic array of char
+  declare jobs_count := 0
+
+  if process_number = 0 then
+    Simulation simulation;
+    declare job := '\0'
+    while can_read(job) do
+      append(job, jobs)
+    end while
+
+    jobs_count := count(jobs)
+  end if
+
+  broadcast(&jobs_count, 1, 0)
+  resize(jobs, jobs_count)
+  broadcast(&jobs_count, count(jobs), 0)
+
+  simulation.run(plate, pTime, pDifusividad, h, 
+    epsilon, route, thread_count);
+
+end procedure
+
+procedure run():
+    declare times := 0
+    read_bin_file();
+    load_job_file();
+
+    while epsilon <= diference
+        copy_matrix();
+        #pragma omp parallel for num_threads(thread_count) {
+            for index := 0 to count(filas) do
+            for index := 0 to count(columnas) do
+                physical_model();
+            if diference < origin_matriz - temporal_matriz
+                diference = origin_matriz - temporal_matriz
+            }
+        write_in_file();
+    end
+end procedure

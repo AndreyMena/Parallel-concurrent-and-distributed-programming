@@ -1,0 +1,51 @@
+procedure main(argc, argv[]):
+    create shared handlers
+    create shared colaSockets
+    create shared colaRequests
+    create shared static httpServer 
+    create shared GolbachWebApp
+    create shared hilosSumas
+    create shared applications := vector<HttpApp>
+    applications := push(GolbachWebApp)
+    httpServer->start(argc, argv)
+end procedure
+
+// httpServer
+procedure start(argc, argv):
+    create bool stopApps := false
+    if analyzeArguments(argc, argv) then
+        for i := 0 to applications.size do
+            startApp(applications[i])
+        end for
+        stopApps := true
+        create producingQueue = Queue<Socket>()
+        for i := 0 to max_connections do
+            create httpConnectionHandler := HttpConnectionHandler(applications)
+            handlers[i].setConsumingQueue(producingQueue)
+            handlers[i].startThread()
+        end for
+        listenForConnections()
+        acceptAllConnections()
+    else
+       print("Excepcion: no se pueden aceptar mas conexiones")
+    end if
+    for i := 0 to max_connections do
+        create socket := Socket() 
+        colaSockets := push(socket)
+    end for
+    for i := 0 to max_connections do
+        waitToFinish(handlers[i])
+        delete handlers[i]
+    end for
+    if stopApps equals true then
+        for i := 0 to applications.size() do
+            stop(applications[i])
+        end for
+    end if
+end procedure
+
+// httpConnectionHandler
+
+procedure HttpConnectionHandler(vector<HttpApp*> applicationss) {
+    applications = applicationss
+}

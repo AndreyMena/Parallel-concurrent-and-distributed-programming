@@ -1,0 +1,18 @@
+
+procedure run():
+    declare times := 0
+    read_bin_file();
+    load_job_file();
+
+    while epsilon <= diference
+        copy_matrix();
+        #pragma omp parallel for num_threads(thread_count) {
+            for index := 0 to count(filas) do
+            for index := 0 to count(columnas) do
+                physical_model();
+            if diference < origin_matriz - temporal_matriz
+                diference = origin_matriz - temporal_matriz
+            }
+        write_in_file();
+    end
+end procedure

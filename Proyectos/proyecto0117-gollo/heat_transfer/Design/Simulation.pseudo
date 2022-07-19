@@ -1,0 +1,179 @@
+Simulation 
+~Simulation
+
+procedure run (plate[20], pTime, pDifusividad, h, epsilon, route, thread_count, outputJobTsv) {
+  print(outputJobTsv, "\t", pTime, "\t", pDifusividad, "\t". h, "\t", epsilon, "\t")
+  route append plate
+  fila := -1
+  columna := -1
+  orgn_mtx := read_file (route, fila, columna)
+  iterations := 0
+  ctime
+  ctime1
+  ctime2
+  diff
+  timestamp()
+  diff := epsilon
+  vectJob := load_file(plate)
+  temp_mtx = orgn_mtx
+  calculateHeatTransfer(epsilon, diff, pTime, pDifusividad, thread_count, h, iterations)
+  ctime2 := cpu_time()
+  ctime = ctime2 - ctime1
+  stime := to_string(ctime)
+  stamp := timestamp()
+  printOutput(plate, fila, columna, vectJob, iterations)
+  print(outputJobTsv, iterations, "\t")
+  secondsTime := iterations * pTime
+  resultTime := calculateTime(secondsTime)
+  print(outputJobTsv, resultTime.str())
+  return 1
+}
+
+procedure calculateTime(secondsTime) {
+  minutesTime := secondsTime / 60
+  timeAux := secondsTime
+  years := 0
+  months := 0
+  days := 0
+  hours := 0
+  minutes := 0
+  seconds := 0
+  if timeAux >= 525600*60 then 
+    while timeAux >= 525600*60 do 
+      timeAux = timeAux - 525600*60
+      years++
+    end
+  if timeAux >= 43200*60 then 
+    while timeAux >= 43200*60 do 
+      timeAux = timeAux - 43200*60
+      months++
+    end
+  if timeAux >= 1440*60 then 
+    while timeAux >= 1440*60 do 
+      timeAux = timeAux - 1440*60
+      days++
+    end
+  if timeAux >= 60*60 then 
+    while timeAux >= 60*60 do 
+      timeAux = timeAux - 60*60
+      hours++
+    end
+  if timeAux >= 1*60 then 
+    while timeAux >= 1*60 do 
+      timeAux = timeAux - 1*60
+      minutes++
+    end
+  if timeAux >= 1 then 
+    while timeAux >= 1 do 
+      timeAux = timeAux - 1
+      seconds++
+    end
+  resultTime = (years, months, days, hours, minutes, seconds)
+  return resultTime
+}
+
+procedure calculateHeatTransfer(epsilon, diff, pTime, pDifusividad, 
+  thread_count, h, iterations) {
+  iterations_print := 1;
+  while epsilon <= diff do 
+    copy(orgn_mtx.begin, orgn_mtx.end temp_mtx)
+    diff := 0.0
+    for size_t i = 1, orgn_mtx.size - 1 i++ do 
+      for size_t j = 1, j < orgn_mtx[1].size - 1, j++ do 
+        orgn_mtx[i][j] = temp_mtx[i][j] + (pTime * pDifusividad) / pow(h, 2.0)*
+        (temp_mtx[i-1][j]+temp_mtx[i][j+1]+temp_mtx[i+1][j]+temp_mtx[i][j-1]-4*temp_mtx[i][j]);
+        if diff < fabs(orgn_mtx[i][j] - temp_mtx[i][j]) then 
+          diff = fabs(orgn_mtx[i][j] - temp_mtx[i][j]);
+      end
+    end
+    iterations++
+    if iterations == iterations_print then
+      iterations_print = 2 * iterations_print
+  end  
+}
+
+procedure printOutput(output_filename[80], fila, columna, vectJob, iterations) {
+  ofstream output
+  output.open
+  for i = 0, orgn_mtx.size i++ do 
+    for j = 0, orgn_mtx[1].size j++ do 
+      if j == 0 then
+        output = orgn_mtx[i][j]
+      Else 
+        output = " ", orgn_mtx[i][j]
+    end
+    output = "\n"
+  end
+  output.close
+}
+
+procedure read_bin_file (route, fila, columna) {
+  fichero := open(route)
+  numeros_vect
+  temperaturas_vect
+  contador := 1
+  for i = 0, 2, i++ do 
+    resultado := read(numeros[i], sizeof(unsigned int), 1 ,fichero)
+    if resultado != 1 then 
+      break
+  end
+  fila := numeros_vect[0]
+  columna := numeros_vect[1]
+  for i = 0, !feof(fichero), i++ do 
+    resultado := read(temperaturas[i], sizeof(double*), 1, fichero)
+    if resultado != 1 then 
+      break
+  end
+  if close(fichero) != 0 then
+    print("No se ha podido cerrar el archivo")
+  print("\n")
+  fila = numeros_vect[0]
+  columna = numeros_vect[1]
+  contador := 0
+  matriz(fila, columna)
+  for i := 0, i < fila, i++ do
+    for j := 0, j < columna, j++ do 
+      matriz[i][j] := temperaturas_vect[contador]
+      contador++
+    end
+  end
+  return matriz
+}
+
+procedure load_job_file(plate[20]) {
+  vectorOfStrings
+  if jobFile.is_open then
+    temp
+    while getline(jobFile, temp) do
+      i := 0
+      vectorOfStrings.push_back(temp)
+      i++
+    end
+    jobFile.close 
+    jobFile = vectorOfStrings[0]
+    return vectorOfStrings
+}
+
+procedure cpu_time {
+  value
+  value := (clock / CLOCKS_PER_SEC)
+  return value
+}
+
+procedure timestamp() {
+  TIME_SIZE := 40
+  time_buffer[TIME_SIZE]
+  now := time(NULL)
+  tm_ptr = localtime(&now)
+  strftime(time_buffer, TIME_SIZE, tm_ptr)
+  buffer_size := sizeof(time_buffer, buffer_size)
+  return TIME_SIZE
+}
+
+procedure convertToString(a, size) {
+  s := ""
+  for i := 0, size, i++ do
+    s = s + a[i]
+  end
+  return s
+}
